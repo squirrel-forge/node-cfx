@@ -1,0 +1,30 @@
+{
+  "name": "@squirrel-forge/node-cfx",
+  "version": "1.0.0",
+  "description": "Node output/console styler",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/squirrel-forge/node-cfx.git"
+  },
+  "keywords": [
+    "node",
+    "console",
+    "styling",
+    "colors",
+    "styling",
+    "terminal"
+  ],
+  "author": "Daniel Hartwell <me@siux.info> (http://siux.info)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/squirrel-forge/node-cfx/issues"
+  },
+  "homepage": "https://github.com/squirrel-forge/node-cfx#readme",
+  "dependencies": {
+    "time-stamp": "^2.2.0"
+  }
+}
