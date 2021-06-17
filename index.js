@@ -68,7 +68,7 @@ class OutputStyler {
          * Settable auto prepend time
          * @type {boolean}
          */
-        this.prependTime = true;
+        this.prependTime = false;
     }
 
     /**
