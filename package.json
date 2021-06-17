@@ -1,6 +1,6 @@
 {
   "name": "@squirrel-forge/node-cfx",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Node output/console styler",
   "main": "index.js",
   "scripts": {

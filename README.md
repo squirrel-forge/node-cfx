@@ -24,6 +24,11 @@ cfx.warn( 'warning' );
 cfx.info( 'info' );
 ```
 
+To enable automatic prefixing with the current timestamp set the *prependTime* property:
+```javascript
+cfx.prependTime = true;
+```
+
 Setting a custom timestamp format, see [time-stamp](https://www.npmjs.com/package/time-stamp) for details.
 ```javascript
 cfx.timestampFormat = 'YYYY-MM-DD HH:mm:ss';
