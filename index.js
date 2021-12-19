@@ -1,15 +1,11 @@
-/* global require, module, process, console */
-'use strict';
-
 /**
  * Requires
  */
 const timestamp = require( 'time-stamp' );
 
 /**
- * Code definitions
- *
- * @type {{string: string,...}}
+ * ASCII code definitions
+ * @type {{bred: string, fyellow: string, fmagenta: string, rv: string, fcyan: string, byellow: string, bl: string, fblue: string, bo: string, fwhite: string, bblack: string, bblue: string, fgreen: string, re: string, th: string, bcyan: string, ul: string, bgreen: string, fred: string, hd: string, fblack: string, bmagenta: string, bwhite: string}}
  */
 const ASCIIREF = {
 
@@ -44,28 +40,68 @@ const ASCIIREF = {
 };
 
 /**
- * Output Styler class
+ * OutputStyler
+ * @class
  */
 class OutputStyler {
 
     /**
      * Constructor
-     *
+     * @constructor
      * @param {Object} reference - ASCII code reference object
-     * @param {Object|console} target - Target object
+     * @param {null|Object|Console} target - Target object
      */
-    constructor( reference, target ) {
-        this._target = target || console;
-        this._reference = reference;
+    constructor( reference, target = null ) {
 
         /**
-         * Settable timestamp format
+         * Output
+         * @protected
+         * @property
+         * @type {Object|Console}
+         */
+        this._ = target || console;
+
+        // Check target
+        if ( typeof this._.log !== 'function' ) {
+            throw new Error( 'Invalid target reference, method not found: target.log()' );
+        }
+
+        /**
+         * Style reference
+         * @public
+         * @property
+         * @type {Object}
+         */
+        this.reference = reference;
+
+        /**
+         * Timestamp format
+         * @public
+         * @property
          * @type {string}
          */
         this.timestampFormat = 'YYYY-MM-DD HH:mm:ss';
 
         /**
+         * Timestamp prefix
+         * @public
+         * @property
+         * @type {string}
+         */
+        this.timestampPrefix = '[fwhite][[re][th]';
+
+        /**
+         * Timestamp suffix
+         * @public
+         * @property
+         * @type {string}
+         */
+        this.timestampSuffix = '[re][fwhite]][re] ';
+
+        /**
          * Settable auto prepend time
+         * @public
+         * @property
          * @type {boolean}
          */
         this.prependTime = false;
@@ -73,75 +109,93 @@ class OutputStyler {
 
     /**
      * Set styles defined in string
-     *
-     * @param {string} str - Target string
-     *
+     * @public
+     * @param {string|number} value - Target string
      * @return {string} - Styled string
      */
-    setStyle( str ) {
-        if ( typeof str !== 'string' ) {
-            return str;
+    setStyle( value ) {
+
+        // Simple type
+        if ( ![ 'string', 'number', 'undefined' ].includes( typeof value ) ) {
+            return value;
         }
-        var styled = str;
-        Object.keys( this._reference ).forEach( ( key ) => {
+
+        // Convert to string
+        let styled = value + '';
+
+        // Replace all style references
+        Object.keys( this.reference ).forEach( ( key ) => {
             const regex = new RegExp( '\\[(' + key + ')\\]', 'g' );
-            styled = styled.replace( regex, this._reference[ key ] );
+            styled = styled.replace( regex, this.reference[ key ] );
         } );
         return styled;
     }
 
     /**
      * Prepends time if required
-     *
+     * @protected
      * @return {void}
      */
     _prependTime() {
         if ( this.prependTime ) {
-            process.stdout.write( this.setStyle( '[fwhite][[re][th]' + timestamp( this.timestampFormat ) + '[re][fwhite]][re] ' ) );
+            process.stdout.write( this.setStyle( this.timestampPrefix
+                + timestamp( this.timestampFormat ) + this.timestampSuffix ) );
         }
     }
 
     /**
      * Write styled
-     *
      * @protected
-     *
      * @param {function} fn - Target function
      * @param {Array} data - Arguments
      * @param {null|string} prepend - Style to prepend
      * @param {string} append - Style to append
+     * @return {void}
      */
     _write( fn, data, prepend = null, append = ' [re]' ) {
+        let added = 0;
+
+        // Prepend time
         this._prependTime();
+
+        // Set opening style
         if ( prepend ) {
             data.unshift( prepend );
             data.push( append );
+            added += 2;
         }
-        for ( let i = 0; i < data.length; i++ ) {
-            if ( typeof data[ i ] !== 'object' ) {
-                data[ i ] = this.setStyle( data[ i ] );
 
-                if ( typeof data[ i + 1 ] === 'object' ) {
-                    data.splice( i + 1, 0, this.setStyle( append ) );
-                    i++;
-                }
-            } else {
-                if ( typeof data[ i + 1 ] !== 'object' ) {
+        // Only handle style if one was added
+        if ( data.length > added ) {
+            for ( let i = 0; i < data.length; i++ ) {
+                const to = typeof data[ i + 1 ];
+                if ( typeof data[ i ] !== 'object' ) {
+                    data[ i ] = this.setStyle( data[ i ] );
+
+                    // End style for next complex object
+                    if ( to === 'object' && prepend ) {
+                        data.splice( i + 1, 0, this.setStyle( append ) );
+                        i++;
+                    }
+                } else if ( prepend && to !== 'undefined' && to !== 'object' ) {
+
+                    // Reopen style for the next element
                     data.splice( i + 1, 0, this.setStyle( prepend ) );
                     i++;
                 }
             }
         }
-        if ( !this._target[ fn ] ) {
-            fn = 'log'
-        }
-        this._target[ fn ].apply( this._target, data );
+
+        // Ensure valid target function and call
+        if ( !this._[ fn ] ) fn = 'log';
+        this._[ fn ]( ...data );
     }
 
     /**
      * Custom style
-     *
-     * @param data
+     * @public
+     * @param {*} data - Data to log
+     * @return {void}
      */
     log( ...data ) {
         this._write( 'log', data );
@@ -149,52 +203,52 @@ class OutputStyler {
 
     /**
      * Red error style
-     *
-     * @param data
+     * @public
+     * @param {*} data - Data to log
+     * @return {void}
      */
     error( ...data ) {
-        this._write( 'error', data, '[bred][fwhite] ', ' [re]')
+        this._write( 'error', data, '[bred][fwhite] ', ' [re]' );
     }
 
     /**
      * Yellow warning style
-     *
-     * @param data
+     * @public
+     * @param {*} data - Data to log
+     * @return {void}
      */
     warn( ...data ) {
-        this._write( 'warn', data, '[byellow][fblack] ', ' [re]')
+        this._write( 'warn', data, '[byellow][fblack] ', ' [re]' );
     }
 
     /**
      * Cyan info style
-     *
-     * @param data
+     * @public
+     * @param {*} data - Data to log
+     * @return {void}
      */
     info( ...data ) {
-        this._write( 'info', data, '[bblack][fcyan] ', ' [re]')
+        this._write( 'info', data, '[bblack][fcyan] ', ' [re]' );
     }
 
     /**
      * Green success style
-     *
-     * @param data
+     * @public
+     * @param {*} data - Data to log
+     * @return {void}
      */
     success( ...data ) {
-        this._write( 'log', data, '[bgreen][fblack] ', ' [re]')
+        this._write( 'log', data, '[bgreen][fblack] ', ' [re]' );
     }
 }
 
 /**
  * Default cfx instance
- *
  * @type {OutputStyler}
  */
 const cfx = new OutputStyler( ASCIIREF );
 
-/**
- * Export
- * @type {{cfx: OutputStyler, OutputStyler: OutputStyler, ASCIIREF: {string: string, "..."}}}
- */
+// Export all references
 module.exports = {
     ASCIIREF,
     OutputStyler,
