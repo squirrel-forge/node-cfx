@@ -5,7 +5,7 @@ Node output/console styler.
 ## Install
 
 ```
-# npm i @squirrel-forge/node-cfx
+npm i @squirrel-forge/node-cfx
 ```
 
 ## Usage
