@@ -1,4 +1,4 @@
-# node-cfx
+# @squirrel-forge/node-cfx
 
 Node output/console styler.
 
@@ -12,7 +12,7 @@ Node output/console styler.
 
 Getting and using a default instance.
 ```javascript
-const cfx = require( '@squirrel-forge/node-cfx' ).cfx;
+const { cfx } = require( '@squirrel-forge/node-cfx' );
 cfx.log( '[ul][fgreen]something[re]' );
 ```
 
@@ -24,9 +24,20 @@ cfx.warn( 'warning' );
 cfx.info( 'info' );
 ```
 
+Get a styled string:
+```javascript
+const str = cfx.setStyle( '[ul][fgreen]something[re]' ); // \x1b[4m\x1b[32msomething\x1b[0m
+```
+
 To enable automatic prefixing with the current timestamp set the *prependTime* property:
 ```javascript
 cfx.prependTime = true;
+```
+
+To change the timestamp style, use the *timestampPrefix* and *timestampSuffix* properties:
+```javascript
+cfx.timestampPrefix = '[fwhite][[re][th]';
+cfx.timestampSuffix = '[re][fwhite]][re] ';
 ```
 
 Setting a custom timestamp format, see [time-stamp](https://www.npmjs.com/package/time-stamp) for details.
@@ -36,37 +47,29 @@ cfx.timestampFormat = 'YYYY-MM-DD HH:mm:ss';
 
 ## Styling options
 
-Code | Control
----- | ------------
-[re] | Reset
-[rv] | Reverse
-[hd] | Hidden
+### Control and text style
 
-Code | Text
----- | ------------
-[bo] | Bold
-[th] | Thin
-[ul] | Underline
-[bl] | Blink
+ Code | Control | Code | Text
+----- | ------- | ---- | -----
+ [re] | Reset   | [bo] | Bold
+ [rv] | Reverse | [th] | Thin
+      |         | [ul] | Underline
+      |         | [bl] | Blink
+      |         | [hd] | Hidden
 
-Code       | Colors
----------- | ------------
-[fblack]   | Black
-[fred]     | Red
-[fgreen]   | Green
-[fyellow]  | Yellow
-[fblue]    | Blue
-[fmagenta] | Magenta
-[fcyan]    | Cyan
-[fwhite]   | White
+### Text and background colors
 
-Code       | Background
----------- | ------------
-[bblack]   | Black
-[bred]     | Red
-[bgreen]   | Green
-[byellow]  | Yellow
-[bblue]    | Blue
-[bmagenta] | Magenta
-[bcyan]    | Cyan
-[bwhite]   | White
+ Text       | Background | Color
+----------- | ---------- | -------
+ [fblack]   | [bblack]   | Black
+ [fred]     | [bred]     | Red
+ [fgreen]   | [bgreen]   | Green
+ [fyellow]  | [byellow]  | Yellow
+ [fblue]    | [bblue]    | Blue
+ [fmagenta] | [bmagenta] | Magenta
+ [fcyan]    | [bcyan]    | Cyan
+ [fwhite]   | [bwhite]   | White
+
+## Issues
+
+Please submit issues here: [https://github.com/squirrel-forge/node-cfx/issues](https://github.com/squirrel-forge/node-cfx/issues)
