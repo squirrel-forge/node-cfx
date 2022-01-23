@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.1
+ - Removed *squirrel-forge-node-cfx-test-output.png* from npm package.
+
 ## 1.2.0
  - Added new options docs, fixed the docs code tables and improved code docs.
  - Improved *OutputStyler.constructor* argument validity checks.

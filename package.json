@@ -1,6 +1,6 @@
 {
   "name": "@squirrel-forge/node-cfx",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Node stdout/console styler, replace the basic *console* methods and allow for coloured output.",
   "main": "index.js",
   "scripts": {
