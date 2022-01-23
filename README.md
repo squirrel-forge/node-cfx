@@ -27,6 +27,11 @@ cfx.warn( 'warning' );
 cfx.info( 'info' );
 ```
 
+Objects will not be styled, but outputted in plain, so you may mix arguments like with the console object.
+```javascript
+cfx.success( 'success', { some : 'object' }, 'another message' );
+```
+
 Get a styled string:
 ```javascript
 const str = cfx.setStyle( '[ul][fgreen]underlined green text[re]' ); // \x1b[4m\x1b[32munderlined green text\x1b[0m
