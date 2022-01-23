@@ -4,8 +4,12 @@
 const timestamp = require( 'time-stamp' );
 
 /**
+ * @typedef {Object<string, string>} ASCIIReference
+ */
+
+/**
  * ASCII code definitions
- * @type {{bred: string, fyellow: string, fmagenta: string, rv: string, fcyan: string, byellow: string, bl: string, fblue: string, bo: string, fwhite: string, bblack: string, bblue: string, fgreen: string, re: string, th: string, bcyan: string, ul: string, bgreen: string, fred: string, hd: string, fblack: string, bmagenta: string, bwhite: string}}
+ * @type {Object|ASCIIReference}
  */
 const ASCIIREF = {
 
@@ -40,6 +44,29 @@ const ASCIIREF = {
 };
 
 /**
+ * @callback OutputLoggerMethod
+ * @param {...*} input - Output arguments
+ * @return {void}
+ */
+
+/**
+ * @typedef {Object} OutputLogger
+ * @property {Function|OutputLoggerMethod} log - Output any styled
+ * @property {null|Function|OutputLoggerMethod} error - Output error style
+ * @property {null|Function|OutputLoggerMethod} warn - Output warning style
+ * @property {null|Function|OutputLoggerMethod} info - Output info style
+ * @property {null|Function|OutputLoggerMethod} success - Output success style
+ */
+
+/**
+ * @typedef {Object<string, string>} OutputStylerDefaultStyles
+ * @property {string} error - Error style
+ * @property {string} warn - Warning style
+ * @property {string} success - Success style
+ * @property {string} info - Info style
+ */
+
+/**
  * OutputStyler
  * @class
  */
@@ -48,10 +75,21 @@ class OutputStyler {
     /**
      * Constructor
      * @constructor
-     * @param {Object} reference - ASCII code reference object
-     * @param {null|Object|Console} target - Target object
+     * @param {Object|ASCIIReference} reference - ASCII code reference object
+     * @param {Object|OutputLogger|Console} target - Target object, default: console
+     * @throws Error
      */
-    constructor( reference, target = null ) {
+    constructor( reference, target ) {
+
+        // Check target
+        if ( target && typeof this._.log !== 'function' ) {
+            throw new Error( 'Invalid target reference, method not found: target.log()' );
+        }
+
+        // Check reference
+        if ( reference && ( typeof reference !== 'object' || !Object.keys( reference ).length ) ) {
+            throw new Error( 'Invalid ascii reference object or no keys available' );
+        }
 
         /**
          * Output
@@ -61,18 +99,13 @@ class OutputStyler {
          */
         this._ = target || console;
 
-        // Check target
-        if ( typeof this._.log !== 'function' ) {
-            throw new Error( 'Invalid target reference, method not found: target.log()' );
-        }
-
         /**
          * Style reference
          * @public
          * @property
          * @type {Object}
          */
-        this.reference = reference;
+        this.reference = reference || ASCIIREF;
 
         /**
          * Timestamp format
@@ -105,6 +138,33 @@ class OutputStyler {
          * @type {boolean}
          */
         this.prependTime = false;
+
+        /**
+         * Default reset string
+         * @public
+         * @property
+         * @type {string}
+         */
+        this.defaultReset = ' [re]';
+
+        /**
+         * Default method styles
+         * @type {Object|OutputStylerDefaultStyles}
+         */
+        this.style = {
+            error : '[bred][fwhite] ',
+            warn : '[byellow][fblack] ',
+            info : '[bblack][fcyan] ',
+            success : '[bgreen][fblack] ',
+        };
+
+        /**
+         * Style reset string
+         * @public
+         * @property
+         * @type {string}
+         */
+        this.styleReset = ' [re]';
     }
 
     /**
@@ -146,13 +206,14 @@ class OutputStyler {
     /**
      * Write styled
      * @protected
-     * @param {function} fn - Target function
-     * @param {Array} data - Arguments
-     * @param {null|string} prepend - Style to prepend
-     * @param {string} append - Style to append
+     * @param {string} fn - Target function name
+     * @param {Array<*>} data - Arguments
+     * @param {null|string} prepend - Style to prepend, default: null
+     * @param {string} append - Style to append, default: null|OutputStyler.defaultReset
      * @return {void}
      */
-    _write( fn, data, prepend = null, append = ' [re]' ) {
+    _write( fn, data, prepend = null, append = null ) {
+        append = append || this.defaultReset;
         let added = 0;
 
         // Prepend time
@@ -194,7 +255,7 @@ class OutputStyler {
     /**
      * Custom style
      * @public
-     * @param {*} data - Data to log
+     * @param {...*} data - Data to log
      * @return {void}
      */
     log( ...data ) {
@@ -204,41 +265,41 @@ class OutputStyler {
     /**
      * Red error style
      * @public
-     * @param {*} data - Data to log
+     * @param {...*} data - Data to log
      * @return {void}
      */
     error( ...data ) {
-        this._write( 'error', data, '[bred][fwhite] ', ' [re]' );
+        this._write( 'error', data, this.style.error, this.styleReset );
     }
 
     /**
      * Yellow warning style
      * @public
-     * @param {*} data - Data to log
+     * @param {...*} data - Data to log
      * @return {void}
      */
     warn( ...data ) {
-        this._write( 'warn', data, '[byellow][fblack] ', ' [re]' );
+        this._write( 'warn', data, this.style.warn, this.styleReset );
     }
 
     /**
      * Cyan info style
      * @public
-     * @param {*} data - Data to log
+     * @param {...*} data - Data to log
      * @return {void}
      */
     info( ...data ) {
-        this._write( 'info', data, '[bblack][fcyan] ', ' [re]' );
+        this._write( 'info', data, this.style.info, this.styleReset );
     }
 
     /**
      * Green success style
      * @public
-     * @param {*} data - Data to log
+     * @param {...*} data - Data to log
      * @return {void}
      */
     success( ...data ) {
-        this._write( 'log', data, '[bgreen][fblack] ', ' [re]' );
+        this._write( 'log', data, this.style.success, this.styleReset );
     }
 }
 
@@ -246,9 +307,9 @@ class OutputStyler {
  * Default cfx instance
  * @type {OutputStyler}
  */
-const cfx = new OutputStyler( ASCIIREF );
+const cfx = new OutputStyler();
 
-// Export all references
+// Export all public references
 module.exports = {
     ASCIIREF,
     OutputStyler,
