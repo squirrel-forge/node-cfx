@@ -1,7 +1,7 @@
 {
   "name": "@squirrel-forge/node-cfx",
-  "version": "1.1.0",
-  "description": "Node output/console styler",
+  "version": "1.2.0",
+  "description": "Node stdout/console styler, replace the basic *console* methods and allow for coloured output.",
   "main": "index.js",
   "scripts": {
     "test": "node test.js"
@@ -12,10 +12,14 @@
   },
   "keywords": [
     "node",
+    "cli",
     "console",
     "styling",
     "colors",
-    "terminal"
+    "terminal",
+    "output",
+    "stdout",
+    "ascii"
   ],
   "author": "Daniel Hartwell <me@siux.info> (http://siux.info)",
   "license": "MIT",
