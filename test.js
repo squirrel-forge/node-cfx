@@ -1,13 +1,56 @@
 /**
  * Requires
  */
-const { cfx } = require( './index.js' );
+const { cfx, ASCIIREF, OutputStyler } = require( './index.js' );
 const pkg = require( './package.json' );
 
 /**
- * Notify color table
+ * Notify
  */
-cfx.success( pkg.name + '@' + pkg.version + ' color table' );
+cfx.success( 'Running ' + pkg.name + '@' + pkg.version + ' tests' );
+
+/**
+ * Check exports
+ */
+if ( cfx instanceof OutputStyler ) {
+    cfx.log( 'cfx instanceof OutputStyler' );
+} else {
+    cfx.error( '>>> Error please report:', OutputStyler );
+}
+if ( cfx.reference === ASCIIREF ) {
+    cfx.log( 'cfx.reference === ASCIIREF' );
+} else {
+    cfx.error( '>>> Error please report:\n', ASCIIREF );
+}
+
+/**
+ * Default styles
+ */
+cfx.info( '>>> 1. Default styles:' );
+
+cfx.log( 'no style, default colors' );
+cfx.error( 'error style, background: red, text: white' );
+cfx.warn( 'warning style, background: yellow, text: black' );
+cfx.info( 'information style, background: black, text: cyan' );
+cfx.success( 'success style, background: green, text: black' );
+
+/**
+ * Timestamp
+ */
+cfx.info( '>>> 2. Timestamp styles:' );
+cfx.prependTime = true;
+cfx.log( 'no style with timestamp' );
+cfx.timestampPrefix = '[bwhite][fblue][[fblack]';
+cfx.timestampSuffix = '[fblue]][re] ';
+cfx.log( 'no style with timestamp in custom style' );
+cfx.timestampFormat = 'HH:mm:ss';
+cfx.log( 'no style with time only' );
+cfx.prependTime = false;
+
+/**
+ * Colors and text styles
+ */
+cfx.info( '>>> 3. Color table:' );
 
 /**
  * Colors 16
@@ -65,6 +108,8 @@ for ( let i = 0; i < colors.length; i++ ) {
 /**
  * Notify bug reports
  */
-cfx.warn( 'If above color table or output does not match it\'s descriptions please report an issue here:' );
+cfx.info( '>>> 4. Issues and bugs' );
+cfx.warn( 'If any of the above output does not match it\'s descriptions please report an issue here:' );
 cfx.info( pkg.bugs.url );
+cfx.success( 'Tests for ' + pkg.name + '@' + pkg.version + ' completed.' );
 process.exit( 0 );
