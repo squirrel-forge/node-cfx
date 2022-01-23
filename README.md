@@ -49,26 +49,26 @@ cfx.timestampFormat = 'YYYY-MM-DD HH:mm:ss';
 
 ### Control and text style
 
- Code | Control | Code | Text
------ | ------- | ---- | -----
- [re] | Reset   | [bo] | Bold
- [rv] | Reverse | [th] | Thin
-      |         | [ul] | Underline
-      |         | [bl] | Blink
-      |         | [hd] | Hidden
+| Code | Control | Code | Text      |
+|------|---------|------|-----------|
+| [re] | Reset   | [bo] | Bold      |
+| [rv] | Reverse | [th] | Thin      |
+| -    | -       | [ul] | Underline |
+| -    | -       | [bl] | Blink     |
+| -    | -       | [hd] | Hidden    |
 
 ### Text and background colors
 
- Text       | Background | Color
------------ | ---------- | -------
- [fblack]   | [bblack]   | Black
- [fred]     | [bred]     | Red
- [fgreen]   | [bgreen]   | Green
- [fyellow]  | [byellow]  | Yellow
- [fblue]    | [bblue]    | Blue
- [fmagenta] | [bmagenta] | Magenta
- [fcyan]    | [bcyan]    | Cyan
- [fwhite]   | [bwhite]   | White
+|  Text      | Background | Color   |
+|------------|------------|---------|
+| [fblack]   | [bblack]   | Black   |
+| [fred]     | [bred]     | Red     |
+| [fgreen]   | [bgreen]   | Green   |
+| [fyellow]  | [byellow]  | Yellow  |
+| [fblue]    | [bblue]    | Blue    |
+| [fmagenta] | [bmagenta] | Magenta |
+| [fcyan]    | [bcyan]    | Cyan    |
+| [fwhite]   | [bwhite]   | White   |
 
 ## Issues
 
