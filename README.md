@@ -1,6 +1,6 @@
 # @squirrel-forge/node-cfx
 
-Node output/console styler.
+Node stdout/console styler, replace the basic *console* methods and allow for coloured output.
 
 ## Install
 
@@ -8,12 +8,15 @@ Node output/console styler.
 npm i @squirrel-forge/node-cfx
 ```
 
+## Example output
+![@squirrel-forge/node-cfx example text output](https://raw.githubusercontent.com/squirrel-forge/node-cfx/main/squirrel-forge-node-cfx-test-output.png)
+
 ## Usage
 
 Getting and using a default instance.
 ```javascript
-const { cfx } = require( '@squirrel-forge/node-cfx' );
-cfx.log( '[ul][fgreen]something[re]' );
+const { cfx, ASCIIREF, OutputStyler } = require( '@squirrel-forge/node-cfx' );
+cfx.log( '[ul][fgreen]underlined green text[re]' );
 ```
 
 Default styled output.
@@ -26,7 +29,7 @@ cfx.info( 'info' );
 
 Get a styled string:
 ```javascript
-const str = cfx.setStyle( '[ul][fgreen]something[re]' ); // \x1b[4m\x1b[32msomething\x1b[0m
+const str = cfx.setStyle( '[ul][fgreen]underlined green text[re]' ); // \x1b[4m\x1b[32munderlined green text\x1b[0m
 ```
 
 To enable automatic prefixing with the current timestamp set the *prependTime* property:
@@ -70,6 +73,27 @@ cfx.timestampFormat = 'YYYY-MM-DD HH:mm:ss';
 | [fcyan]    | [bcyan]    | Cyan    |
 | [fwhite]   | [bwhite]   | White   |
 
-## Issues
+## Overriding default styles
 
-Please submit issues here: [https://github.com/squirrel-forge/node-cfx/issues](https://github.com/squirrel-forge/node-cfx/issues)
+Default styles and reset.
+```javascript
+cfx.style = {
+    error : '[bred][fwhite] ',
+    warn : '[byellow][fblack] ',
+    info : '[bblack][fcyan] ',
+    success : '[bgreen][fblack] ',
+};
+this.styleReset = ' [re]';
+```
+
+Default reset, used when no other reset is passed to the internal *_write* method, useful when making your own style methods.
+```javascript
+cfx.defaultReset = ' [re]';
+```
+
+## Issues and docs
+
+If you encounter any issues, please report [here](https://github.com/squirrel-forge/node-cfx/issues).
+
+---
+Check the sourcecode on [github](https://github.com/squirrel-forge/node-cfx) for detailed comments.
