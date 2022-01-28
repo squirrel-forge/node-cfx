@@ -15,7 +15,7 @@ npm i @squirrel-forge/node-cfx
 
 Getting and using a default instance.
 ```javascript
-const { cfx, ASCIIREF, OutputStyler } = require( '@squirrel-forge/node-cfx' );
+const { cfx } = require( '@squirrel-forge/node-cfx' );
 cfx.log( '[ul][fgreen]underlined green text[re]' );
 ```
 
@@ -94,6 +94,31 @@ this.styleReset = ' [re]';
 Default reset, used when no other reset is passed to the internal *_write* method, useful when making your own style methods.
 ```javascript
 cfx.defaultReset = ' [re]';
+```
+
+## Creating a custom instance
+
+```javascript
+const { ASCIIREF, OutputStyler } = require( '@squirrel-forge/node-cfx' );
+const myCfx = new OutputStyler( ASCIIREF, console );
+```
+
+## Extending the styler
+
+```javascript
+const { ASCIIREF, OutputStyler } = require( '@squirrel-forge/node-cfx' );
+
+// Extended styler class
+class MyOutputStyler extends OutputStyler {
+
+    constructor() {
+        super( ASCIIREF, console );
+        
+        // Extend the constructor or set default options
+    }
+
+    // Add override or extend any methods
+}
 ```
 
 ## Issues and docs
